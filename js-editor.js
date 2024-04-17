@@ -22,6 +22,7 @@ class canvasView {
         this.mouseX = 0;
         this.mouseY = 0;
         this.scale = 1.0;
+        this.grid = 10.0;
 
         this.canvas.addEventListener('mouseover', this.mouseuplistener.bind(this));
         this.canvas.addEventListener('mousedown', this.mousedownlistener.bind(this));
@@ -69,6 +70,9 @@ class canvasView {
             this.oldx = this.mouseX;
             this.oldy = this.mouseY;
 
+        }
+        else {
+            this.draw()
         }
     }
 
@@ -186,6 +190,13 @@ class canvasView {
                 this.line(this.screenX(x), this.screenY(y), this.screenX(x) + 1, this.screenY(y) + 1, 'red')
             }
         }
+
+        var mouseModelGridX = Math.round(this.modelX(this.mouseX) / this.grid) * this.grid;
+        var mouseModelGridY = Math.round(this.modelY(this.mouseY) / this.grid) * this.grid;
+        var mouseGridX = this.screenX(mouseModelGridX);
+        var mouseGridY = this.screenY(mouseModelGridY);
+
+        this.line(this.mouseX, this.mouseY, mouseGridX, mouseGridY, 'green');
     }
 
     mLine(x1, y1, x2, y2, style) {
