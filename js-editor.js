@@ -13,15 +13,15 @@ class canvasView {
         this.image = source;
         this.canvas.oncontextmenu = function(e) { e.preventDefault(); e.stopPropagation(); return false;}
         this.isMove = false;
-        this.x0 = 0;
-        this.y0 = 0;
-        this.x1 = 0;
-        this.y1 = 0;
+        this.x0 = 0.0;
+        this.y0 = 0.0;
+        this.x1 = 0.0;
+        this.y1 = 0.0;
         this.w1 = this.image.width;
         this.h1 = this.image.height;
         this.mouseX = 0;
         this.mouseY = 0;
-        this.scale = 1;
+        this.scale = 1.0;
 
         this.canvas.addEventListener('mouseover', this.mouseuplistener.bind(this));
         this.canvas.addEventListener('mousedown', this.mousedownlistener.bind(this));
@@ -131,16 +131,89 @@ class canvasView {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.context.drawImage(this.image, this.x1, this.y1, this.w1, this.h1);
 
+        this.drawAxis();
+    }
+
+    drawAxis() {
+
+        this.line(this.x0 - 10000, this.y0, this.x0 + 10000, this.y0, 'red');
+        this.line(this.x0, this.y0 - 10000, this.x0, this.y0 + 10000, 'red');
+
+        var iw = this.canvas.width / this.scale;
+        var step = 1;
+
+        while (Math.floor(iw) / Math.floor(step) > 30 && step < 10000) {
+            step *= 10;
+        }
+
+        console.log('width=' + iw + ' step=' + step + ' mouse x=' + this.modelX(this.mouseX) + ' y=' + this.modelY(this.mouseY));
+
+        var minx = 0;
+        var maxx = 0;
+        var miny = 0;
+        var maxy = 0;
+
+        for (var x = 0; x > this.modelX(0) > 0; x -= step) {
+            this.line(this.screenX(x), this.y0 - 5, this.screenX(x), this.y0 + 5, 'red')
+            minx = x;
+        }
+
+        for (var x = 0; x < this.modelX(this.canvas.width); x += step) {
+            this.line(this.screenX(x), this.y0 - 5, this.screenX(x), this.y0 + 5, 'red')
+            maxx = x;
+        }
+
+        for (var y = 0; y > this.modelY(0) > 0; y -= step) {
+            this.line(this.x0 - 5, this.screenY(y), this.x0 + 5, this.screenY(y), 'red')
+            miny = y;
+        }
+
+        for (var y = 0; y < this.modelY(this.canvas.height); y += step) {
+            this.line(this.x0 - 5, this.screenY(y), this.x0 + 5, this.screenY(y), 'red')
+            maxy = y;
+        }
+
+        for (var x = minx; x <= maxx; x += step) {
+
+            for (var y = miny; y <= maxy; y += step) {
+                this.line(this.screenX(x), this.screenY(y), this.screenX(x) + 1, this.screenY(y) + 1, 'red')
+            }
+        }
+    }
+
+    mLine(x1, y1, x2, y2, style) {
         this.context.beginPath();
-        this.context.strokeStyle = "red";
+        this.context.strokeStyle = style;
         this.context.lineWidth = 1;
-        this.context.moveTo(this.x0 - 100000, this.y0)
-        this.context.lineTo(this.x0 + 100000, this.y0)
-        this.context.moveTo(this.x0, this.y0 - 100000)
-        this.context.lineTo(this.x0, this.y0 + 100000)
+        this.context.moveTo(screenX(x1), screenY(y1))
+        this.context.lineTo(screenX(x2), screenY(y2))
         this.context.stroke();
     }
 
+    line(x1, y1, x2, y2, style) {
+        this.context.beginPath();
+        this.context.strokeStyle = style;
+        this.context.lineWidth = 1;
+        this.context.moveTo(x1, y1)
+        this.context.lineTo(x2, y2)
+        this.context.stroke();
+    }
+
+    screenX(x) {
+        return this.x0 + x * this.scale;
+    }
+
+    screenY(y) {
+        return this.y0 + y * this.scale;
+    }
+
+    modelX(x) {
+        return (x - this.x0) / this.scale;
+    }
+
+    modelY(y) {
+        return (y - this.y0) / this.scale;
+    }
 };
 
 
