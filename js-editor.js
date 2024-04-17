@@ -148,6 +148,8 @@ class canvasView {
 
         console.log('width=' + iw + ' step=' + step + ' mouse x=' + this.modelX(this.mouseX) + ' y=' + this.modelY(this.mouseY));
 
+        this.context.font = "10px serif";
+
         var minx = 0;
         var maxx = 0;
         var miny = 0;
@@ -156,21 +158,26 @@ class canvasView {
         for (var x = 0; x > this.modelX(0) > 0; x -= step) {
             this.line(this.screenX(x), this.y0 - 5, this.screenX(x), this.y0 + 5, 'red')
             minx = x;
+
+            if (x != 0) this.context.fillText("" + x, this.screenX(x) - 5, this.y0 - 7);
         }
 
         for (var x = 0; x < this.modelX(this.canvas.width); x += step) {
             this.line(this.screenX(x), this.y0 - 5, this.screenX(x), this.y0 + 5, 'red')
             maxx = x;
+            if (x != 0) this.context.fillText("" + x, this.screenX(x) - 5, this.y0 - 7);
         }
 
         for (var y = 0; y > this.modelY(0) > 0; y -= step) {
             this.line(this.x0 - 5, this.screenY(y), this.x0 + 5, this.screenY(y), 'red')
             miny = y;
+            if (y != 0) this.context.fillText("" + y, this.x0 + 7, this.screenY(y) + 4);
         }
 
         for (var y = 0; y < this.modelY(this.canvas.height); y += step) {
             this.line(this.x0 - 5, this.screenY(y), this.x0 + 5, this.screenY(y), 'red')
             maxy = y;
+            if (y != 0) this.context.fillText("" + y, this.x0 + 7, this.screenY(y) + 4);
         }
 
         for (var x = minx; x <= maxx; x += step) {
