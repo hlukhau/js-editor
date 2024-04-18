@@ -1,3 +1,7 @@
+/*
+    MIT License of Geometric library - https://github.com/HarryStevens/geometric?tab=readme-ov-file#polygonArea
+
+*/
 
 'use strict';
 
@@ -37,7 +41,13 @@ class canvasView {
         this.x0 = this.x1 + this.w1 / 2;
         this.y0 = this.y1 + this.h1 / 2;
 
-
+        var vertices = [[100, 100], [200, 300], [300, 0]];
+        var area = geometric.polygonArea(vertices);
+        console.log(
+            'Square = ' + area +
+            '   [200, 200] in polygone = ' + geometric.pointInPolygon([200, 200], vertices) +
+            ' but [100, 200] in polygone = ' + geometric.pointInPolygon([100, 200], vertices)
+        )
 
         this.draw();
     }
@@ -150,7 +160,7 @@ class canvasView {
             step *= 10;
         }
 
-        console.log('width=' + iw + ' step=' + step + ' mouse x=' + this.modelX(this.mouseX) + ' y=' + this.modelY(this.mouseY));
+//        console.log('width=' + iw + ' step=' + step + ' mouse x=' + this.modelX(this.mouseX) + ' y=' + this.modelY(this.mouseY));
 
         this.context.font = "10px serif";
 
