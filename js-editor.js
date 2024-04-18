@@ -67,7 +67,7 @@ class canvasView {
 
             if (this.isCreateCountur) {
                 this.ps.push([this.mouseModelGridX, this.mouseModelGridY]);
-                console.log(JSON.stringify(this.ps))
+//                console.log(JSON.stringify(this.ps))
                 this.draw();
             }
         }
@@ -267,6 +267,7 @@ class canvasView {
                 this.context.lineTo(this.screenX(point[0]), this.screenY(point[1]));
             }
         }
+        this.context.stroke();
         this.context.fill();
     }
 
