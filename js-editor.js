@@ -29,7 +29,7 @@ class canvasView {
         this.grid = 10.0;
 
         this.ps = [];
-        this.isCreateCountur = true;
+        this.isCreateCountur = false;
 
         this.canvas.addEventListener('mouseover', this.mouseuplistener.bind(this));
         this.canvas.addEventListener('mousedown', this.mousedownlistener.bind(this));
@@ -62,6 +62,15 @@ class canvasView {
         this.oldy = this.mouseY;
 
         this.isMove = true;
+
+        if (event.button == 0) {
+
+            if (this.isCreateCountur) {
+                this.ps.push([this.mouseModelGridX, this.mouseModelGridY]);
+                console.log(JSON.stringify(this.ps))
+                this.draw();
+            }
+        }
     }
 
     mousemovelistener(event) {
@@ -100,15 +109,6 @@ class canvasView {
             var x = (this.mouseX - this.x1) / this.scale;
             var y = (this.mouseY - this.y1) / this.scale;
             console.log(x, y);
-        }
-
-        if (event.button == 0) {
-
-            if (this.isCreateCountur) {
-                this.ps.push([this.mouseModelGridX, this.mouseModelGridY]);
-//                console.log(JSON.stringify(this.ps))
-                this.draw();
-            }
         }
     }
 
@@ -223,6 +223,8 @@ class canvasView {
             this.context.strokeStyle = 'red';
             this.context.fillStyle = 'white';
 
+            this.polygon(this.ps);
+
             for (const pair of this.ps) {
                 this.context.beginPath();
                 this.context.arc(this.screenX(pair[0]), this.screenY(pair[1]), 4, 0, 2 * Math.PI);
@@ -248,6 +250,24 @@ class canvasView {
         this.context.moveTo(x1, y1)
         this.context.lineTo(x2, y2)
         this.context.stroke();
+    }
+
+    polygon(vertexes) {
+
+        this.context.beginPath();
+        var first = true;
+
+        for (var point of vertexes) {
+
+            if (first) {
+                this.context.moveTo(this.screenX(point[0]), this.screenY(point[1]));
+                first = false;
+            }
+            else {
+                this.context.lineTo(this.screenX(point[0]), this.screenY(point[1]));
+            }
+        }
+        this.context.fill();
     }
 
     screenX(x) {
@@ -281,8 +301,14 @@ window.onload = function () {
 
     var viewer = new canvasView(canvas, image);
 
-};
+    document.getElementById('btn_create_polygone')
+        .addEventListener('click', (e) => {
+        e.target.closest('button').classList.toggle('pressed');
+        viewer.isCreateCountur = 1 - viewer.isCreateCountur;
+        viewer.ps = []
+    })
 
+};
 
 
 
