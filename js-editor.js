@@ -28,6 +28,9 @@ class canvasView {
         this.scale = 1.0;
         this.grid = 10.0;
 
+        this.ps = [];
+        this.isCreateCountur = true;
+
         this.canvas.addEventListener('mouseover', this.mouseuplistener.bind(this));
         this.canvas.addEventListener('mousedown', this.mousedownlistener.bind(this));
         this.canvas.addEventListener('mousemove', this.mousemovelistener.bind(this));
@@ -98,6 +101,15 @@ class canvasView {
             var y = (this.mouseY - this.y1) / this.scale;
             console.log(x, y);
         }
+
+        if (event.button == 0) {
+
+            if (this.isCreateCountur) {
+                this.ps.push([this.mouseModelGridX, this.mouseModelGridY]);
+//                console.log(JSON.stringify(this.ps))
+                this.draw();
+            }
+        }
     }
 
     wheellistener(e) {
@@ -128,8 +140,6 @@ class canvasView {
                 this.x0 = this.x1 + this.w1 / 2;
                 this.y0 = this.y1 + this.h1 / 2;
                 this.scale = this.w1 / this.image.width;
-
-                this.draw();
             }
         }
     }
@@ -160,7 +170,7 @@ class canvasView {
             step *= 10;
         }
 
-//        console.log('width=' + iw + ' step=' + step + ' mouse x=' + this.modelX(this.mouseX) + ' y=' + this.modelY(this.mouseY));
+        //        console.log('width=' + iw + ' step=' + step + ' mouse x=' + this.modelX(this.mouseX) + ' y=' + this.modelY(this.mouseY));
 
         this.context.font = "10px serif";
 
@@ -201,12 +211,25 @@ class canvasView {
             }
         }
 
-        var mouseModelGridX = Math.round(this.modelX(this.mouseX) / this.grid) * this.grid;
-        var mouseModelGridY = Math.round(this.modelY(this.mouseY) / this.grid) * this.grid;
-        var mouseGridX = this.screenX(mouseModelGridX);
-        var mouseGridY = this.screenY(mouseModelGridY);
+        this.mouseModelGridX = Math.round(this.modelX(this.mouseX) / this.grid) * this.grid;
+        this.mouseModelGridY = Math.round(this.modelY(this.mouseY) / this.grid) * this.grid;
+        var mouseGridX = this.screenX(this.mouseModelGridX);
+        var mouseGridY = this.screenY(this.mouseModelGridY);
 
         this.line(this.mouseX, this.mouseY, mouseGridX, mouseGridY, 'green');
+
+        if (this.isCreateCountur) {
+
+            this.context.strokeStyle = 'red';
+            this.context.fillStyle = 'white';
+
+            for (const pair of this.ps) {
+                this.context.beginPath();
+                this.context.arc(this.screenX(pair[0]), this.screenY(pair[1]), 4, 0, 2 * Math.PI);
+                this.context.fill();
+                this.context.stroke();
+            }
+        }
     }
 
     mLine(x1, y1, x2, y2, style) {
