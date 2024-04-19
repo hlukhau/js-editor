@@ -31,11 +31,16 @@ class canvasView {
         this.ps = [];
         this.isCreateCountur = false;
 
-        this.canvas.addEventListener('mouseover', this.mouseuplistener.bind(this));
-        this.canvas.addEventListener('mousedown', this.mousedownlistener.bind(this));
-        this.canvas.addEventListener('mousemove', this.mousemovelistener.bind(this));
-        this.canvas.addEventListener('mouseup', this.mouseuplistener.bind(this));
-        this.canvas.addEventListener('wheel', this.wheellistener.bind(this), { passive: true });
+        this.conturs = []
+        this.selected
+
+
+        this.canvas.addEventListener('mouseover', this.mouseuplistener.bind(this))
+        this.canvas.addEventListener('mousedown', this.mousedownlistener.bind(this))
+        this.canvas.addEventListener('mousemove', this.mousemovelistener.bind(this))
+        this.canvas.addEventListener('mouseup', this.mouseuplistener.bind(this))
+        this.canvas.addEventListener('dblclick', this.mouseupDBClickListener.bind(this))
+        this.canvas.addEventListener('wheel', this.wheellistener.bind(this), { passive: true })
 
 
 
@@ -55,6 +60,14 @@ class canvasView {
         this.draw();
     }
 
+    mouseupDBClickListener(event) {
+        this.isCreateCountur = false;
+        this.conturs.push(this.ps)
+        this.ps = []
+        document.getElementById('btn_create_polygone').classList.toggle('pressed');
+        this.draw();
+    }
+
     mousedownlistener(event) {
         this.mouse(event);
 
@@ -67,7 +80,22 @@ class canvasView {
 
             if (this.isCreateCountur) {
                 this.ps.push([this.mouseModelGridX, this.mouseModelGridY]);
-//                console.log(JSON.stringify(this.ps))
+                this.draw();
+            }
+
+            this.selected = null;
+
+            for (const contur of this.conturs) {
+
+                if (geometric.pointInPolygon([
+                    this.modelX(this.mouseX),
+                    this.modelY(this.mouseY)
+                ], contur)) {
+                    this.selected = contur;
+                }
+            }
+
+            if (this.selected != null) {
                 this.draw();
             }
         }
@@ -173,6 +201,7 @@ class canvasView {
         //        console.log('width=' + iw + ' step=' + step + ' mouse x=' + this.modelX(this.mouseX) + ' y=' + this.modelY(this.mouseY));
 
         this.context.font = "10px serif";
+        this.context.fillStyle = 'black'
 
         var minx = 0;
         var maxx = 0;
@@ -218,6 +247,13 @@ class canvasView {
 
         this.line(this.mouseX, this.mouseY, mouseGridX, mouseGridY, 'green');
 
+
+        for (const contur of this.conturs) {
+
+            this.polygon(contur);
+        }
+
+
         if (this.isCreateCountur) {
 
             this.context.strokeStyle = 'red';
@@ -253,6 +289,13 @@ class canvasView {
     }
 
     polygon(vertexes) {
+
+        this.context.strokeStyle = 'black';
+        this.context.fillStyle = 'gray';
+
+        if (this.selected == vertexes) {
+            this.context.strokeStyle = 'yellow';
+        }
 
         this.context.beginPath();
         var first = true;
