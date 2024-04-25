@@ -35,12 +35,12 @@ class canvasView {
         this.selected
 
 
-        this.canvas.addEventListener('mouseover', this.mouseuplistener.bind(this))
-        this.canvas.addEventListener('mousedown', this.mousedownlistener.bind(this))
-        this.canvas.addEventListener('mousemove', this.mousemovelistener.bind(this))
-        this.canvas.addEventListener('mouseup', this.mouseuplistener.bind(this))
-        this.canvas.addEventListener('dblclick', this.mouseupDBClickListener.bind(this))
-        this.canvas.addEventListener('wheel', this.wheellistener.bind(this), { passive: true })
+        this.canvas.addEventListener('mouseover', this.mouseuplistener.bind(this), {passive: true})
+        this.canvas.addEventListener('mousedown', this.mousedownlistener.bind(this), {passive: true})
+        this.canvas.addEventListener('mousemove', this.mousemovelistener.bind(this), {passive: true})
+        this.canvas.addEventListener('mouseup', this.mouseuplistener.bind(this), {passive: true})
+        this.canvas.addEventListener('dblclick', this.mouseupDBClickListener.bind(this), {passive: true})
+        this.canvas.addEventListener('wheel', this.wheellistener.bind(this), {passive: true})
 
 
 
@@ -141,6 +141,7 @@ class canvasView {
     }
 
     wheellistener(e) {
+
         this.mouse(e);
 
         if (! this.isMove) {
@@ -155,11 +156,8 @@ class canvasView {
                 this.x0 = this.x1 + this.w1 / 2;
                 this.y0 = this.y1 + this.h1 / 2;
                 this.scale = this.w1 / this.image.width;
-
-                this.draw();
             }
             else {
-
                 this.x1 = this.mouseX - (this.mouseX - this.x1) / 1.2;
                 this.y1 = this.mouseY - (this.mouseY - this.y1) / 1.2;
                 this.w1 /= 1.2;
@@ -169,6 +167,8 @@ class canvasView {
                 this.y0 = this.y1 + this.h1 / 2;
                 this.scale = this.w1 / this.image.width;
             }
+
+            this.draw();
         }
     }
 
@@ -182,12 +182,10 @@ class canvasView {
     draw() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.context.drawImage(this.image, this.x1, this.y1, this.w1, this.h1);
-
         this.drawAxis();
     }
 
     drawAxis() {
-
         this.line(this.x0 - 10000, this.y0, this.x0 + 10000, this.y0, 'red');
         this.line(this.x0, this.y0 - 10000, this.x0, this.y0 + 10000, 'red');
 
