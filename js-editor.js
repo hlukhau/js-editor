@@ -30,6 +30,9 @@ class canvasView {
 
         this.ps = [];
         this.isCreateCountur = false;
+        this.isCreateCircle = false;
+        this.isCreateRectangle = false;
+        this.isCreateDiagram = false;
 
         this.conturs = []
         this.selected
@@ -64,7 +67,7 @@ class canvasView {
         this.isCreateCountur = false;
         this.conturs.push(this.ps)
         this.ps = []
-        document.getElementById('btn_create_polygone').classList.toggle('pressed');
+        document.getElementById('btn_create_polygon').classList.toggle('pressed');
         this.draw();
     }
 
@@ -342,15 +345,65 @@ window.onload = function () {
     var canvas = document.getElementById("paint-canvas");
 
     var viewer = new canvasView(canvas, image);
+    var buttons = document.getElementsByClassName('toggle_button')
+    console.log(buttons);
 
-    document.getElementById('btn_create_polygone')
-        .addEventListener('click', (e) => {
-        e.target.closest('button').classList.toggle('pressed');
-        viewer.isCreateCountur = 1 - viewer.isCreateCountur;
-        viewer.ps = []
-    })
+    for(var element of buttons) {
 
+        element.addEventListener('click', (e) => {
+            e.target.classList.toggle('pressed');
+
+            resetAllOther(e.target.innerText);
+
+            if (e.target.innerText == 'Create polygon') {
+                viewer.isCreateCircle = false
+                viewer.isCreateRectangle = false
+                viewer.isCreateDiagram = false
+                viewer.isCreateCountur = 1 - viewer.isCreateCountur;
+                viewer.ps = []
+                console.log(e.target.innerText + ' ' + viewer.isCreateCountur);
+            }
+
+            if (e.target.innerText == 'Create circle') {
+                viewer.isCreateCountur = false
+                viewer.isCreateRectangle = false
+                viewer.isCreateDiagram = false
+                viewer.isCreateCircle = 1 - viewer.isCreateCircle;
+                viewer.ps = []
+                console.log(e.target.innerText + ' ' + viewer.isCreateCircle);
+            }
+
+            if (e.target.innerText == 'Create rectangle') {
+                viewer.isCreateCountur = false
+                viewer.isCreateCircle = false
+                viewer.isCreateDiagram = false
+                viewer.isCreateRectangle = 1 - viewer.isCreateRectangle;
+                viewer.ps = []
+                console.log(e.target.innerText + ' ' + viewer.isCreateRectangle);
+            }
+
+            if (e.target.innerText == 'Create diagram') {
+                viewer.isCreateCountur = false
+                viewer.isCreateCircle = false
+                viewer.isCreateRectangle = false
+                viewer.isCreateDiagram = 1 - viewer.isCreateDiagram;
+                viewer.ps = []
+                console.log(e.target.innerText + ' ' + viewer.isCreateDiagram);
+            }
+        });
+    }
 };
 
+function resetAllOther(target) {
+    var buttons = document.getElementsByClassName('toggle_button')
+
+    for(var element of buttons) {
+        if (element.innerText != target) {
+            if (element.classList.contains("pressed")) {
+                element.classList.toggle('pressed')
+            }
+        }
+    }
+}
 
 
