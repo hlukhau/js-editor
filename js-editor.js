@@ -64,11 +64,14 @@ class canvasView {
     }
 
     mouseupDBClickListener(event) {
-        this.isCreateCountur = false;
-        this.conturs.push(this.ps)
-        this.ps = []
-        document.getElementById('btn_create_polygon').classList.toggle('pressed');
-        this.draw();
+
+        if (this.isCreateCountur) {
+            this.isCreateCountur = false;
+            this.conturs.push(this.ps)
+            this.ps = []
+            document.getElementById('btn_create_polygon').classList.toggle('pressed');
+            this.draw();
+        }
     }
 
     mousedownlistener(event) {
