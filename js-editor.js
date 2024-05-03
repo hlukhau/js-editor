@@ -27,6 +27,8 @@ class canvasView {
         this.mouseY = 0;
         this.scale = 1.0;
         this.grid = 10.0;
+        this.p1 = [1e20, 1e20]
+        this.p2 = [1e20, 1e20]
 
         this.ps = [];
         this.isCreateCountur = false;
@@ -87,6 +89,15 @@ class canvasView {
             if (this.isCreateCountur) {
                 this.ps.push([this.mouseModelGridX, this.mouseModelGridY]);
                 this.draw();
+            }
+            if (this.isCreateCircle) {
+
+                if (this.p1[0] == 1e20) {
+                    this.p1 = [this.mouseModelGridX, this.mouseModelGridY];
+                }
+                else {
+                    this.p2 = [this.mouseModelGridX, this.mouseModelGridY];
+                }
             }
 
             this.selected = null;
