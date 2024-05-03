@@ -93,10 +93,14 @@ class canvasView {
             if (this.isCreateCircle) {
 
                 if (this.p1[0] == 1e20) {
+                    console.log("p1: " + this.p1)
                     this.p1 = [this.mouseModelGridX, this.mouseModelGridY];
                 }
                 else {
                     this.p2 = [this.mouseModelGridX, this.mouseModelGridY];
+                    this.isCreateCircle = false;
+                    document.getElementById('btn_create_circle').classList.toggle('pressed');
+                    this.draw();
                 }
             }
 
@@ -200,6 +204,7 @@ class canvasView {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.context.drawImage(this.image, this.x1, this.y1, this.w1, this.h1);
         this.drawAxis();
+        this.drawScene()
     }
 
     drawAxis() {
@@ -257,11 +262,13 @@ class canvasView {
 
         this.mouseModelGridX = Math.round(this.modelX(this.mouseX) / this.grid) * this.grid;
         this.mouseModelGridY = Math.round(this.modelY(this.mouseY) / this.grid) * this.grid;
-        var mouseGridX = this.screenX(this.mouseModelGridX);
-        var mouseGridY = this.screenY(this.mouseModelGridY);
+        this.mouseGridX = this.screenX(this.mouseModelGridX);
+        this.mouseGridY = this.screenY(this.mouseModelGridY);
 
-        this.line(this.mouseX, this.mouseY, mouseGridX, mouseGridY, 'green');
+        this.line(this.mouseX, this.mouseY, this.mouseGridX, this.mouseGridY, 'green');
+    }
 
+    drawScene() {
 
         for (const contur of this.conturs) {
 
@@ -282,6 +289,15 @@ class canvasView {
                 this.context.fill();
                 this.context.stroke();
             }
+        }
+
+        else if (this.isCreateCircle) {
+            this.context.strokeStyle = 'white';
+            var radius = Math.sqrt((this.p1[0] - this.mouseModelGridX) * (this.p1[0] - this.mouseModelGridX) +
+                                   (this.p1[1] - this.mouseModelGridY) * (this.p1[1] - this.mouseModelGridY));
+            this.context.beginPath();
+            this.context.arc(this.screenX(this.p1[0]), this.screenY(this.p1[1]), radius * this.scale, 0, 2 * Math.PI);
+            this.context.stroke();
         }
     }
 
@@ -304,7 +320,6 @@ class canvasView {
     }
 
     polygon(vertexes) {
-
         this.context.strokeStyle = 'black';
         this.context.fillStyle = 'gray';
 
