@@ -398,7 +398,7 @@ window.onload = function () {
                 viewer.isCreateRectangle = false
                 viewer.isCreateDiagram = false
                 viewer.isCreateCircle = 1 - viewer.isCreateCircle;
-                viewer.ps = []
+                viewer.p1 = [1e20, 1e20]
                 console.log(e.target.innerText + ' ' + viewer.isCreateCircle);
             }
 
