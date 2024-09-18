@@ -201,10 +201,26 @@ class canvasView {
 
 
     draw() {
+        this.canvas.width = document.documentElement.clientWidth;
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.context.drawImage(this.image, this.x1, this.y1, this.w1, this.h1);
-        this.drawAxis();
+        // this.context.drawImage(this.image, this.x1, this.y1, this.w1, this.h1);
+        this.drawAxis()
+        this.drawTimeAxis()
         this.drawScene()
+    }
+
+    drawTimeAxis() {
+        this.line(this.x0 - 10000, this.y0 + 10, this.x0 + 10000, this.y0 + 10, 'gray');
+        this.line(this.x0 - 10000, this.y0 + 30, this.x0 + 10000, this.y0 + 30, 'gray');
+
+        var dataw = this.modelX(this.canvas.width) - this.modelX(0); // ширина экрана в модели
+
+        var date = new Date();
+        console.log("HOUR: ", date.getHours(), "Minutes: ", date.getMinutes(), "DAY: ", date.getDate(), " Month: ", date.getMonth(), " YEAR: ", date.getFullYear(), " Days in month: ", this.daysInMonth(date.getMonth(), date.getFullYear()))
+    }
+
+    daysInMonth (month, year) {
+        return new Date(parseInt(year), parseInt(month) + 1, 0).getDate();
     }
 
     drawAxis() {
@@ -358,6 +374,10 @@ class canvasView {
 
     modelY(y) {
         return (y - this.y0) / this.scale;
+    }
+
+    drawTimeline() {
+        this.context.measureText('qwe');
     }
 };
 

@@ -8,6 +8,8 @@ body{
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    margin: 0;
+    padding: 0;
 }
 
 .toggle_button { border: 1px solid black;}
@@ -28,10 +30,12 @@ body{
     <canvas id=source-canvas></canvas>
     <img id=source src=images/y1.jpg hidden alt="hidden image" /><br />
 
-    <button class="toggle_button" type="button" id="btn_create_polygon">Create polygon</button>
-    <button class="toggle_button" type="button" id="btn_create_circle">Create circle</button>
-    <button class="toggle_button" type="button" id="btn_create_rectangle">Create rectangle</button>
-    <button class="toggle_button" type="button" id="btn_create_diagram">Create diagram</button>
+    <div id="info-bar">
+      <button class="toggle_button" type="button" id="btn_create_polygon">Create polygon</button>
+      <button class="toggle_button" type="button" id="btn_create_circle">Create circle</button>
+      <button class="toggle_button" type="button" id="btn_create_rectangle">Create rectangle</button>
+      <button class="toggle_button" type="button" id="btn_create_diagram">Create diagram</button>
+    </div>
 
   </body>
 
