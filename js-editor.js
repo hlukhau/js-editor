@@ -274,7 +274,13 @@ class canvasView {
                         this.line(sdx, this.y0 + 10, sdx, this.y0 + 30, 'gray', 1);
                     }
 
+
+                    var dDraw = new Date(y, m, d, 0, 0, 0, 0);
+                    dDraw.setDate(dDraw.getDate() + 1);
+                    let difference_In_Time = dDraw.getTime() - d0.getTime();
+                    let difference_In_Days_On_Screen = Math.round(difference_In_Time * 10 / (1000 * 3600 * 24));
                     dayx += 10;
+                    sdx = this.screenX(-difference_In_Days_On_Screen);
                     sdx = this.screenX(dayx);
                 }
             }
