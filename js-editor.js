@@ -8,7 +8,6 @@
 
 class canvasView {
 
-
     constructor(canvas, source) {
         this.canvas = canvas;
         this.context = canvas.getContext("2d");
@@ -38,6 +37,7 @@ class canvasView {
 
         this.conturs = []
         this.selected
+        this.months = ['Янаварь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 
 
         this.canvas.addEventListener('mouseover', this.mouseuplistener.bind(this), {passive: true})
@@ -204,19 +204,60 @@ class canvasView {
         this.canvas.width = document.documentElement.clientWidth;
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         // this.context.drawImage(this.image, this.x1, this.y1, this.w1, this.h1);
-        this.drawAxis()
+//        this.drawAxis()
         this.drawTimeAxis()
         this.drawScene()
     }
 
     drawTimeAxis() {
-        this.line(this.x0 - 10000, this.y0 + 10, this.x0 + 10000, this.y0 + 10, 'gray');
-        this.line(this.x0 - 10000, this.y0 + 30, this.x0 + 10000, this.y0 + 30, 'gray');
+        this.line(0, this.y0 + 10, this.canvas.width, this.y0 + 10, 'gray');
+        this.line(0, this.y0 + 30, this.canvas.width, this.y0 + 30, 'gray');
 
         var dataw = this.modelX(this.canvas.width) - this.modelX(0); // ширина экрана в модели
 
         var date = new Date();
-        console.log("HOUR: ", date.getHours(), "Minutes: ", date.getMinutes(), "DAY: ", date.getDate(), " Month: ", date.getMonth(), " YEAR: ", date.getFullYear(), " Days in month: ", this.daysInMonth(date.getMonth(), date.getFullYear()))
+
+        var d0 = new Date(date.getFullYear() - 3, 0, 1, 0, 0, 0, 0);
+        var y0 = date.getFullYear() - 3;
+        var dayx = 0;
+        var sdx = this.screenX(dayx);
+        var olddx = sdx - 40;
+
+        console.log("")
+
+        for (var y = y0; y < y0 + 10; y++) {
+
+            if (sdx > 0 && sdx < this.canvas.width) {
+                this.line(sdx, this.y0 + 10, sdx, this.y0 + 120, 'red', 4);
+                this.context.fillText("" + y, sdx + 5, this.y0 + 140);
+            }
+
+            for (var m = 0; m < 12; m++) {
+
+                if (sdx > 0 && sdx < this.canvas.width) {
+                    this.line(sdx, this.y0 + 10, sdx, this.y0 + 60, 'black', 2);
+                    this.context.fillText(this.months[m], sdx + 5, this.y0 + 80);
+                }
+
+                var days =  this.daysInMonth(m, y);
+
+                for (var d = 1; d <= days; d++) {
+
+                    if (sdx > 0 && sdx < this.canvas.width) {
+
+                        if (sdx - olddx > 30 && this.screenX(dayx + 10) - sdx > 20) {
+                            this.context.fillText("" + d, sdx + 5, this.y0 + 25);
+                            olddx = sdx
+                        }
+
+                        this.line(sdx, this.y0 + 10, sdx, this.y0 + 30, 'gray');
+                    }
+
+                    dayx += 10;
+                    sdx = this.screenX(dayx);
+                }
+            }
+        }
     }
 
     daysInMonth (month, year) {
@@ -327,9 +368,13 @@ class canvasView {
     }
 
     line(x1, y1, x2, y2, style) {
+        line(x1, y1, x2, y2, style, 1);
+    }
+
+    line(x1, y1, x2, y2, style, lineWidth) {
         this.context.beginPath();
         this.context.strokeStyle = style;
-        this.context.lineWidth = 1;
+        this.context.lineWidth = lineWidth;
         this.context.moveTo(x1, y1)
         this.context.lineTo(x2, y2)
         this.context.stroke();
