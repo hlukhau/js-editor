@@ -210,16 +210,26 @@ class canvasView {
     }
 
     drawTimeAxis() {
-        this.line(0, this.y0 + 10, this.canvas.width, this.y0 + 10, 'gray');
-        this.line(0, this.y0 + 30, this.canvas.width, this.y0 + 30, 'gray');
-
         var dataw = this.modelX(this.canvas.width) - this.modelX(0); // ширина экрана в модели
 
         var date = new Date();
 
         var d0 = new Date(date.getFullYear() - 3, 0, 1, 0, 0, 0, 0);
         var y0 = date.getFullYear() - 3;
-        var dayx = 0;
+
+        let Difference_In_Time = date.getTime() - d0.getTime();
+
+        // Calculating the no. of days between
+        // two dates
+        let difference_In_Days_On_Screen = Math.round(Difference_In_Time * 10 / (1000 * 3600 * 24));
+
+        var dayx = -difference_In_Days_On_Screen;
+        this.line(this.screenX(0), this.y0 + 100, this.screenX(0), this.y0 - 100, 'silver', this.screenX(10) - this.screenX(0));
+        this.line(0, this.y0 + 10, this.canvas.width, this.y0 + 10, 'gray', 1);
+        this.line(0, this.y0 + 30, this.canvas.width, this.y0 + 30, 'gray', 1);
+
+        console.log(dayx)
+
         var sdx = this.screenX(dayx);
         var olddx = sdx - 40;
 
@@ -229,14 +239,25 @@ class canvasView {
 
             if (sdx > 0 && sdx < this.canvas.width) {
                 this.line(sdx, this.y0 + 10, sdx, this.y0 + 120, 'red', 4);
-                this.context.fillText("" + y, sdx + 5, this.y0 + 140);
+                this.drawText("" + y, sdx + 5, this.y0 + 140, 40, 'green')
+            }
+            else if (sdx < 0) {
+
+                if (this.isScreenMotion(sdx, this.screenX(dayx + 365 * 10))) {
+                    this.drawText("" + y, 5, this.y0 + 140, 40, 'green')
+                }
             }
 
             for (var m = 0; m < 12; m++) {
 
                 if (sdx > 0 && sdx < this.canvas.width) {
                     this.line(sdx, this.y0 + 10, sdx, this.y0 + 60, 'black', 2);
-                    this.context.fillText(this.months[m], sdx + 5, this.y0 + 80);
+                    this.drawText(this.months[m], sdx + 5, this.y0 + 80, 20, 'green')
+                }
+                else if (sdx < 0) {
+                    if (this.isScreenMotion(sdx, this.screenX(dayx + 31 * 10))) {
+                        this.drawText(this.months[m], 5, this.y0 + 80, 20, 'green')
+                    }
                 }
 
                 var days =  this.daysInMonth(m, y);
@@ -246,11 +267,11 @@ class canvasView {
                     if (sdx > 0 && sdx < this.canvas.width) {
 
                         if (sdx - olddx > 30 && this.screenX(dayx + 10) - sdx > 20) {
-                            this.context.fillText("" + d, sdx + 5, this.y0 + 25);
+                            this.drawText("" + d, sdx + 5, this.y0 + 25, 10, 'green')
                             olddx = sdx
                         }
 
-                        this.line(sdx, this.y0 + 10, sdx, this.y0 + 30, 'gray');
+                        this.line(sdx, this.y0 + 10, sdx, this.y0 + 30, 'gray', 1);
                     }
 
                     dayx += 10;
@@ -258,6 +279,18 @@ class canvasView {
                 }
             }
         }
+    }
+
+    isScreenMotion(x1, x2) {
+        if (x1 < 0 && x2 > this.canvas.width - 200) {
+            return true;
+        }
+    }
+
+    drawText(text, x, y, size, style) {
+        this.context.font = size + 'px Verdana'
+        this.context.fillStyle = style
+        this.context.fillText(text, x, y);
     }
 
     daysInMonth (month, year) {
