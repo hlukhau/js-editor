@@ -36,6 +36,7 @@ class canvasView {
         this.isCreateCircle = false;
         this.isCreateRectangle = false;
         this.isCreateDiagram = false;
+        this.dayModelSize = 100;
 
         this.conturs = []
         this.selected
@@ -221,14 +222,14 @@ class canvasView {
         var y0 = date.getFullYear() - 3;
 
         let difference_In_Time = dateNow.getTime() - this.d0.getTime();
-        let difference_In_Days_On_Model = Math.round(difference_In_Time * 10 / (1000 * 3600 * 24));
+        let difference_In_Days_On_Model = Math.round(difference_In_Time * this.dayModelSize / (1000 * 3600 * 24));
         this.dayx = -difference_In_Days_On_Model;
 
         let sdx = this.screenX(5);
 //        this.line(sdx, this.y0 + 100, sdx, this.y0 - 100, 'silver', this.screenX(10) - this.screenX(0));
 
         difference_In_Time = date.getTime() - this.d0.getTime();
-        difference_In_Days_On_Model = Math.round(difference_In_Time * 10 / (1000 * 3600 * 24));
+        difference_In_Days_On_Model = Math.round(difference_In_Time * this.dayModelSize / (1000 * 3600 * 24));
         sdx = this.screenX(difference_In_Days_On_Model + this.dayx);
         this.line(sdx, this.y0 + 100, sdx, this.y0 - 2000, 'green', 1);
 
@@ -257,7 +258,7 @@ class canvasView {
             }
             else if (sdx < 0) {
 
-                if (this.isScreenMotion(sdx, sdx + this.screenX(365 * 10) - this.screenX(0))) {
+                if (this.isScreenMotion(sdx, sdx + this.screenX(365 * this.dayModelSize) - this.screenX(0))) {
                     this.drawText("" + y, 5, this.y0 + texty + 40, 40, 'green')
                 }
             }
@@ -266,14 +267,17 @@ class canvasView {
                 sdx = this.makeSdx(y, m, 1, 0, 0)
 
                 if (sdx > 0 && sdx < this.canvas.width) {
-                    this.line(sdx, this.y0 + 10, sdx, this.y0 + 60, 'black', 2);
 
-                    if (this.screenX(310) - this.screenX(0) > 100) {
+                    if (this.screenX(31 * this.dayModelSize) - this.screenX(0) > 100) {
                         this.drawText(this.months[m], sdx + 5, this.y0 + texty, 16, 'green')
+                        this.line(sdx, this.y0 + 10, sdx, this.y0 + 60, 'black', 2);
+                    }
+                    else {
+                        this.line(sdx, this.y0 + 10, sdx, this.y0 + 30, 'black', 1);
                     }
                 }
                 else if (sdx < 0) {
-                    if (this.isScreenMotion(sdx, sdx + this.screenX(31 * 10) - this.screenX(0))) {
+                    if (this.isScreenMotion(sdx, sdx + this.screenX(31 * this.dayModelSize) - this.screenX(0))) {
                         this.drawText(this.months[m], 5, this.y0 + texty, 16, 'green')
                     }
                 }
@@ -285,31 +289,36 @@ class canvasView {
 
                     if (sdx > 0 && sdx < this.canvas.width) {
 
-                        if (this.screenX(10) - this.screenX(0) > 3) {
+                        if (this.screenX(this.dayModelSize) - this.screenX(0) > 3) {
 
                             if (this.isWeekend(y, m, d)) {
                                 var path = new Path2D();
                                 path.moveTo(sdx + 1, this.y0 + 11);
                                 path.lineTo(sdx + 1, this.y0 + 29);
-                                path.lineTo(sdx + this.screenX(10) - this.screenX(0) - 1, this.y0 + 29);
-                                path.lineTo(sdx + this.screenX(10) - this.screenX(0) - 1, this.y0 + 11);
+                                path.lineTo(sdx + this.screenX(this.dayModelSize) - this.screenX(0) - 1, this.y0 + 29);
+                                path.lineTo(sdx + this.screenX(this.dayModelSize) - this.screenX(0) - 1, this.y0 + 11);
                                 this.context.fillStyle = '#df4'
                                 this.context.fill(path);
                             }
 
                             this.line(sdx, this.y0 + 10, sdx, this.y0 + 30, 'gray', 1);
 
-                            if (sdx - olddx > 30 && this.screenX(10) - this.screenX(0) > 20) {
-                                this.drawText("" + d, sdx + 5, this.y0 + 25, 10, 'green')
+                            if (sdx - olddx > 30 && this.screenX(this.dayModelSize) - this.screenX(0) > 20) {
+                                this.drawText("" + d, sdx + 5, this.y0 + 25, 12, 'green')
                                 olddx = sdx
                             }
                         }
                     }
 
-                    if (this.screenX(10) - this.screenX(0) > 200) {
+                    if (this.screenX(this.dayModelSize) - this.screenX(0) > 200) {
 
-                        for (var h = 1; h < 23; h++) {
+                        for (var h = 1; h < 25; h++) {
+                            sdx = this.makeSdx(y, m, d, h, 0)
+                            this.line(sdx, this.y0 + 10, sdx, this.y0, 'gray', 1);
 
+                            if (this.screenX(this.dayModelSize) - this.screenX(0) > 400) {
+                                this.drawText("" + h, sdx - 5, this.y0 - 10, 10, 'green')
+                            }
                         }
                     }
                 }
@@ -329,7 +338,7 @@ class canvasView {
         var dDraw = new Date(y, M, d, h, m, 0, 0);
         dDraw.setDate(dDraw.getDate());
         let difference_In_Time = dDraw.getTime() - this.d0.getTime();
-        let difference_In_Days_On_Model = Math.round(difference_In_Time * 10 / (1000 * 3600 * 24));
+        let difference_In_Days_On_Model = Math.round(difference_In_Time * this.dayModelSize / (1000 * 3600 * 24));
         return this.screenX(difference_In_Days_On_Model + this.dayx);
     }
 
@@ -341,7 +350,7 @@ class canvasView {
 
     drawText(text, x, y, size, style) {
 //        this.context.font = 'bold ' + size + 'px Unbounded'
-        this.context.font = size + 'px Unbounded'
+        this.context.font = size + 'px Lato'
         this.context.fillStyle = style
         this.context.fillText(text, x, y);
     }
