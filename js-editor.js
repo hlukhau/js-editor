@@ -28,6 +28,8 @@ class canvasView {
         this.grid = 10.0;
         this.p1 = [1e20, 1e20]
         this.p2 = [1e20, 1e20]
+        this.d0 = new Date();
+        this.dayx = 0;
 
         this.ps = [];
         this.isCreateCountur = false;
@@ -215,35 +217,39 @@ class canvasView {
         var date = new Date();
         var dateNow = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0);
 
-        var d0 = new Date(date.getFullYear() - 3, 0, 1, 0, 0, 0, 0);
+        this.d0 = new Date(date.getFullYear() - 3, 0, 1, 0, 0, 0, 0);
         var y0 = date.getFullYear() - 3;
 
-        let difference_In_Time = dateNow.getTime() - d0.getTime();
+        let difference_In_Time = dateNow.getTime() - this.d0.getTime();
         let difference_In_Days_On_Model = Math.round(difference_In_Time * 10 / (1000 * 3600 * 24));
-        var dayx = -difference_In_Days_On_Model;
+        this.dayx = -difference_In_Days_On_Model;
 
         let sdx = this.screenX(5);
-        this.line(sdx, this.y0 + 100, sdx, this.y0 - 100, 'silver', this.screenX(10) - this.screenX(0));
+//        this.line(sdx, this.y0 + 100, sdx, this.y0 - 100, 'silver', this.screenX(10) - this.screenX(0));
 
-        difference_In_Time = date.getTime() - d0.getTime();
+        difference_In_Time = date.getTime() - this.d0.getTime();
         difference_In_Days_On_Model = Math.round(difference_In_Time * 10 / (1000 * 3600 * 24));
-        sdx = this.screenX(difference_In_Days_On_Model + dayx);
-        this.line(sdx, this.y0 + 100, sdx, this.y0 - 100, 'green', 1);
+        sdx = this.screenX(difference_In_Days_On_Model + this.dayx);
+        this.line(sdx, this.y0 + 100, sdx, this.y0 - 2000, 'green', 1);
+
+        var t_size = 30;
+        var path = new Path2D();
+        path.moveTo(sdx + t_size / 2, this.y0 + 100 + t_size);
+        path.lineTo(sdx, this.y0 + 100);
+        path.lineTo(sdx - t_size / 2, this.y0 + 100 + t_size);
+        this.context.fillStyle = 'green'
+        this.context.fill(path);
 
         this.line(0, this.y0 + 10, this.canvas.width, this.y0 + 10, 'gray', 1);
         this.line(0, this.y0 + 30, this.canvas.width, this.y0 + 30, 'gray', 1);
 
-        sdx = this.screenX(-dayx);
+        sdx = this.screenX(-this.dayx);
         let olddx = -10000;
 
         let texty = 60
 
         for (var y = y0; y < y0 + 10; y++) {
-            var dDraw = new Date(y, 0, 1, 0, 0, 0, 0);
-            dDraw.setDate(dDraw.getDate());
-            let difference_In_Time = dDraw.getTime() - d0.getTime();
-            let difference_In_Days_On_Model = Math.round(difference_In_Time * 10 / (1000 * 3600 * 24));
-            sdx = this.screenX(difference_In_Days_On_Model + dayx);
+            sdx = this.makeSdx(y, 0, 1, 0, 0)
 
             if (sdx > 0 && sdx < this.canvas.width) {
                 this.line(sdx, this.y0 + 10, sdx, this.y0 + 120, 'green', 4);
@@ -257,11 +263,7 @@ class canvasView {
             }
 
             for (var m = 0; m < 12; m++) {
-                var dDraw = new Date(y, m, 1, 0, 0, 0, 0);
-                dDraw.setDate(dDraw.getDate());
-                let difference_In_Time = dDraw.getTime() - d0.getTime();
-                let difference_In_Days_On_Model = Math.round(difference_In_Time * 10 / (1000 * 3600 * 24));
-                sdx = this.screenX(difference_In_Days_On_Model + dayx);
+                sdx = this.makeSdx(y, m, 1, 0, 0)
 
                 if (sdx > 0 && sdx < this.canvas.width) {
                     this.line(sdx, this.y0 + 10, sdx, this.y0 + 60, 'black', 2);
@@ -279,22 +281,35 @@ class canvasView {
                 var days =  this.daysInMonth(m, y);
 
                 for (var d = 0; d <= days; d++) {
-                    var dDraw = new Date(y, m, d, 0, 0, 0, 0);
-                    dDraw.setDate(dDraw.getDate());
-                    let difference_In_Time = dDraw.getTime() - d0.getTime();
-                    let difference_In_Days_On_Model = Math.round(difference_In_Time * 10 / (1000 * 3600 * 24));
-                    sdx = this.screenX(difference_In_Days_On_Model + dayx);
+                    sdx = this.makeSdx(y, m, d, 0, 0)
 
                     if (sdx > 0 && sdx < this.canvas.width) {
 
                         if (this.screenX(10) - this.screenX(0) > 3) {
 
+                            if (this.isWeekend(y, m, d)) {
+                                var path = new Path2D();
+                                path.moveTo(sdx + 1, this.y0 + 11);
+                                path.lineTo(sdx + 1, this.y0 + 29);
+                                path.lineTo(sdx + this.screenX(10) - this.screenX(0) - 1, this.y0 + 29);
+                                path.lineTo(sdx + this.screenX(10) - this.screenX(0) - 1, this.y0 + 11);
+                                this.context.fillStyle = '#df4'
+                                this.context.fill(path);
+                            }
+
+                            this.line(sdx, this.y0 + 10, sdx, this.y0 + 30, 'gray', 1);
+
                             if (sdx - olddx > 30 && this.screenX(10) - this.screenX(0) > 20) {
                                 this.drawText("" + d, sdx + 5, this.y0 + 25, 10, 'green')
                                 olddx = sdx
                             }
+                        }
+                    }
 
-                            this.line(sdx, this.y0 + 10, sdx, this.y0 + 30, 'gray', 1);
+                    if (this.screenX(10) - this.screenX(0) > 200) {
+
+                        for (var h = 1; h < 23; h++) {
+
                         }
                     }
                 }
@@ -302,14 +317,31 @@ class canvasView {
         }
     }
 
+    isWeekend(y, M, d) {
+        var dDraw = new Date(y, M, d, 0, 0, 0, 0);
+
+        if (dDraw.getDay() == 6 || dDraw.getDay() == 0) return true;
+
+        return false;
+    }
+
+    makeSdx(y, M, d, h, m) {
+        var dDraw = new Date(y, M, d, h, m, 0, 0);
+        dDraw.setDate(dDraw.getDate());
+        let difference_In_Time = dDraw.getTime() - this.d0.getTime();
+        let difference_In_Days_On_Model = Math.round(difference_In_Time * 10 / (1000 * 3600 * 24));
+        return this.screenX(difference_In_Days_On_Model + this.dayx);
+    }
+
     isScreenMotion(x1, x2) {
-        if (x1 < 0 && x2 > this.canvas.width - 300) {
+        if (x1 < 0 && x2 > 200) {
             return true;
         }
     }
 
     drawText(text, x, y, size, style) {
-        this.context.font = 'bold ' + size + 'px Courier'
+//        this.context.font = 'bold ' + size + 'px Unbounded'
+        this.context.font = size + 'px Unbounded'
         this.context.fillStyle = style
         this.context.fillText(text, x, y);
     }
