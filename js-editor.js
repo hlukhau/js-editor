@@ -36,7 +36,7 @@ class canvasView {
         this.isCreateCircle = false;
         this.isCreateRectangle = false;
         this.isCreateDiagram = false;
-        this.dayModelSize = 100;
+        this.dayModelSize = 10000;
 
         this.conturs = []
         this.selected
@@ -234,15 +234,16 @@ class canvasView {
         this.line(sdx, this.y0 + 100, sdx, this.y0 - 2000, 'green', 1);
 
         var t_size = 30;
-        var path = new Path2D();
-        path.moveTo(sdx + t_size / 2, this.y0 + 100 + t_size);
-        path.lineTo(sdx, this.y0 + 100);
-        path.lineTo(sdx - t_size / 2, this.y0 + 100 + t_size);
-        this.context.fillStyle = 'green'
-        this.context.fill(path);
+        var d_size = 30;
+//        var path = new Path2D();
+//        path.moveTo(sdx + t_size / 2, this.y0 + 100 + t_size);
+//        path.lineTo(sdx, this.y0 + 100);
+//        path.lineTo(sdx - t_size / 2, this.y0 + 100 + t_size);
+//        this.context.fillStyle = 'green'
+//        this.context.fill(path);
 
         this.line(0, this.y0 + 10, this.canvas.width, this.y0 + 10, 'gray', 1);
-        this.line(0, this.y0 + 30, this.canvas.width, this.y0 + 30, 'gray', 1);
+        this.line(0, this.y0 + 40, this.canvas.width, this.y0 + 40, 'gray', 1);
 
         sdx = this.screenX(-this.dayx);
         let olddx = -10000;
@@ -254,12 +255,12 @@ class canvasView {
 
             if (sdx > 0 && sdx < this.canvas.width) {
                 this.line(sdx, this.y0 + 10, sdx, this.y0 + 120, 'green', 4);
-                this.drawText("" + y, sdx + 5, this.y0 + texty + 40, 40, 'green')
+                this.drawText("" + y, sdx + 5, this.y0 + texty + 40, 40, '#568045')
             }
             else if (sdx < 0) {
 
                 if (this.isScreenMotion(sdx, sdx + this.screenX(365 * this.dayModelSize) - this.screenX(0))) {
-                    this.drawText("" + y, 5, this.y0 + texty + 40, 40, 'green')
+                    this.drawText("" + y, 5, this.y0 + texty + 45, 'bold ' + 40, '#568045')
                 }
             }
 
@@ -269,16 +270,16 @@ class canvasView {
                 if (sdx > 0 && sdx < this.canvas.width) {
 
                     if (this.screenX(31 * this.dayModelSize) - this.screenX(0) > 100) {
-                        this.drawText(this.months[m], sdx + 5, this.y0 + texty, 16, 'green')
+                        this.drawText(this.months[m], sdx + 5, this.y0 + texty, 20, '#568045')
                         this.line(sdx, this.y0 + 10, sdx, this.y0 + 60, 'black', 2);
                     }
                     else {
-                        this.line(sdx, this.y0 + 10, sdx, this.y0 + 30, 'black', 1);
+                        this.line(sdx, this.y0 + 10, sdx, this.y0 + 40, 'black', 1);
                     }
                 }
                 else if (sdx < 0) {
                     if (this.isScreenMotion(sdx, sdx + this.screenX(31 * this.dayModelSize) - this.screenX(0))) {
-                        this.drawText(this.months[m], 5, this.y0 + texty, 16, 'green')
+                        this.drawText(this.months[m], 5, this.y0 + texty + 5, 'bold ' + 25, '#568045')
                     }
                 }
 
@@ -287,37 +288,73 @@ class canvasView {
                 for (var d = 0; d <= days; d++) {
                     sdx = this.makeSdx(y, m, d, 0, 0)
 
-                    if (sdx > 0 && sdx < this.canvas.width) {
+                    if (sdx > 0 && sdx < this.canvas.width || sdx < 0 && sdx + this.screenX(this.dayModelSize) - this.screenX(0) > 0) {
 
-                        if (this.screenX(this.dayModelSize) - this.screenX(0) > 3) {
+                        if (this.isScreenMotion(sdx, sdx + this.screenX(this.dayModelSize) - this.screenX(0))) {
+                            this.drawText("" + d, 5, this.y0 + 32, 'bold ' + 20, 'green')
+                        }
+
+                        if (this.screenX(this.dayModelSize) - this.screenX(0) > 20) {
 
                             if (this.isWeekend(y, m, d)) {
                                 var path = new Path2D();
                                 path.moveTo(sdx + 1, this.y0 + 11);
-                                path.lineTo(sdx + 1, this.y0 + 29);
-                                path.lineTo(sdx + this.screenX(this.dayModelSize) - this.screenX(0) - 1, this.y0 + 29);
+                                path.lineTo(sdx + 1, this.y0 + 39);
+                                path.lineTo(sdx + this.screenX(this.dayModelSize) - this.screenX(0) - 1, this.y0 + 39);
                                 path.lineTo(sdx + this.screenX(this.dayModelSize) - this.screenX(0) - 1, this.y0 + 11);
                                 this.context.fillStyle = '#df4'
                                 this.context.fill(path);
                             }
 
-                            this.line(sdx, this.y0 + 10, sdx, this.y0 + 30, 'gray', 1);
+                            this.line(sdx, this.y0 + 10, sdx, this.y0 + 40, 'gray', 1);
 
-                            if (sdx - olddx > 30 && this.screenX(this.dayModelSize) - this.screenX(0) > 20) {
-                                this.drawText("" + d, sdx + 5, this.y0 + 25, 12, 'green')
+                            if (sdx - olddx > 60 && this.screenX(this.dayModelSize) - this.screenX(0) > 40) {
+                                this.drawText("" + d, sdx + 5, this.y0 + 32, 'bold ' + 20, 'green')
                                 olddx = sdx
                             }
                         }
                     }
 
+                    if (sdx < 0) {
+
+                        if (this.isScreenMotion(sdx, sdx + this.screenX(this.dayModelSize) - this.screenX(0))) {
+                            this.drawText("" + d, 5, this.y0 + 32, 'bold ' + 20, 'green')
+                        }
+                    }
+
+
                     if (this.screenX(this.dayModelSize) - this.screenX(0) > 200) {
 
                         for (var h = 1; h < 25; h++) {
                             sdx = this.makeSdx(y, m, d, h, 0)
-                            this.line(sdx, this.y0 + 10, sdx, this.y0, 'gray', 1);
 
-                            if (this.screenX(this.dayModelSize) - this.screenX(0) > 400) {
-                                this.drawText("" + h, sdx - 5, this.y0 - 10, 10, 'green')
+                            if (sdx > 0 && sdx < this.canvas.width || sdx < 0 && sdx + this.screenX(this.dayModelSize / 24) - this.screenX(0) > 0) {
+                                this.line(sdx, this.y0 + 15, sdx, this.y0, 'gray', 1);
+
+                                if (this.screenX(this.dayModelSize) - this.screenX(0) > 400) {
+                                    this.drawText("" + h, sdx - 5, this.y0 - 10, 16, 'green')
+
+                                    if ((this.screenX(this.dayModelSize) - this.screenX(0)) / 24 > 400) {
+
+                                        for (var M = 1; M < 60; M++) {
+                                            sdx = this.makeSdx(y, m, d, h, M)
+
+                                            if (M%10 == 0) {
+                                                this.line(sdx, this.y0 + 10, sdx, this.y0, 'gray', 1);
+                                                this.drawText("" + M, sdx - 5, this.y0 - 10, 10, 'gray')
+                                            }
+                                            else {
+                                                if ((this.screenX(this.dayModelSize) - this.screenX(0)) / 24 > 400) {
+                                                    this.line(sdx, this.y0 + 10, sdx, this.y0, 'gray', 1);
+
+                                                    if ((this.screenX(this.dayModelSize) - this.screenX(0)) / 24 > 2000) {
+                                                        this.drawText("" + M, sdx - 5, this.y0 - 10, 10, 'gray')
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
