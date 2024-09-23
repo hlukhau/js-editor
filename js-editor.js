@@ -233,14 +233,14 @@ class canvasView {
         sdx = this.screenX(difference_In_Days_On_Model + this.dayx);
         this.line(sdx, this.y0 + 100, sdx, this.y0 - 2000, 'green', 1);
 
-        var t_size = 30;
+        var t_size = 10;
         var d_size = 30;
-//        var path = new Path2D();
-//        path.moveTo(sdx + t_size / 2, this.y0 + 100 + t_size);
-//        path.lineTo(sdx, this.y0 + 100);
-//        path.lineTo(sdx - t_size / 2, this.y0 + 100 + t_size);
-//        this.context.fillStyle = 'green'
-//        this.context.fill(path);
+        var path = new Path2D();
+        path.moveTo(sdx + t_size / 2, this.y0 + 100 + t_size);
+        path.lineTo(sdx, this.y0 + 100);
+        path.lineTo(sdx - t_size / 2, this.y0 + 100 + t_size);
+        this.context.fillStyle = 'green'
+        this.context.fill(path);
 
         this.line(0, this.y0 + 10, this.canvas.width, this.y0 + 10, 'gray', 1);
         this.line(0, this.y0 + 40, this.canvas.width, this.y0 + 40, 'gray', 1);
@@ -331,8 +331,8 @@ class canvasView {
                             if (sdx > 0 && sdx < this.canvas.width || sdx < 0 && sdx + this.screenX(this.dayModelSize / 24) - this.screenX(0) > 0) {
                                 this.line(sdx, this.y0 + 15, sdx, this.y0, 'gray', 1);
 
-                                if (this.screenX(this.dayModelSize) - this.screenX(0) > 400) {
-                                    this.drawText("" + h, sdx - 5, this.y0 - 10, 16, 'green')
+                                if (this.screenX(this.dayModelSize) - this.screenX(0) > 600) {
+                                    this.drawText("" + h, sdx - 5, this.y0 - 10, 14, 'green')
 
                                     if ((this.screenX(this.dayModelSize) - this.screenX(0)) / 24 > 400) {
 
