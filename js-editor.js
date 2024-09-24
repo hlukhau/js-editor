@@ -202,11 +202,19 @@ class canvasView {
         this.mouseY = e.clientY - boundings.top;
     }
 
+    clear() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.rect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.fillStyle = 'white';
+        this.context.fill();
+    }
+
 
     draw() {
         this.canvas.width = document.documentElement.clientWidth;
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        // this.context.drawImage(this.image, this.x1, this.y1, this.w1, this.h1);
+        this.clear()
+//        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+//        this.context.drawImage(this.image, this.x1, this.y1, this.w1, this.h1);
 //        this.drawAxis()
         this.drawTimeAxis()
         this.drawScene()
@@ -231,14 +239,14 @@ class canvasView {
         difference_In_Time = date.getTime() - this.d0.getTime();
         difference_In_Days_On_Model = Math.round(difference_In_Time * this.dayModelSize / (1000 * 3600 * 24));
         sdx = this.screenX(difference_In_Days_On_Model + this.dayx);
-        this.line(sdx, this.y0 + 100, sdx, this.y0 - 2000, 'green', 1);
+        this.line(sdx, this.y0 + 200, sdx, this.y0 - 2000, 'green', 1);
 
         var t_size = 10;
         var d_size = 30;
         var path = new Path2D();
-        path.moveTo(sdx + t_size / 2, this.y0 + 100 + t_size);
-        path.lineTo(sdx, this.y0 + 100);
-        path.lineTo(sdx - t_size / 2, this.y0 + 100 + t_size);
+        path.moveTo(sdx + t_size / 2, this.y0 + 200 + t_size);
+        path.lineTo(sdx, this.y0 + 200);
+        path.lineTo(sdx - t_size / 2, this.y0 + 200 + t_size);
         this.context.fillStyle = 'green'
         this.context.fill(path);
 
@@ -291,7 +299,7 @@ class canvasView {
                     if (sdx > 0 && sdx < this.canvas.width || sdx < 0 && sdx + this.screenX(this.dayModelSize) - this.screenX(0) > 0) {
 
                         if (this.isScreenMotion(sdx, sdx + this.screenX(this.dayModelSize) - this.screenX(0))) {
-                            this.drawText("" + d, 5, this.y0 + 32, 'bold ' + 20, 'green')
+                            this.drawText("" + d, 5, this.y0 + 32, 'bold ' + 20, '#c9af65')
                         }
 
                         if (this.screenX(this.dayModelSize) - this.screenX(0) > 20) {
@@ -309,7 +317,7 @@ class canvasView {
                             this.line(sdx, this.y0 + 10, sdx, this.y0 + 40, 'gray', 1);
 
                             if (sdx - olddx > 60 && this.screenX(this.dayModelSize) - this.screenX(0) > 40) {
-                                this.drawText("" + d, sdx + 5, this.y0 + 32, 'bold ' + 20, 'green')
+                                this.drawText("" + d, sdx + 5, this.y0 + 32, 'bold ' + 20, '#c9af65')
                                 olddx = sdx
                             }
                         }
@@ -318,7 +326,7 @@ class canvasView {
                     if (sdx < 0) {
 
                         if (this.isScreenMotion(sdx, sdx + this.screenX(this.dayModelSize) - this.screenX(0))) {
-                            this.drawText("" + d, 5, this.y0 + 32, 'bold ' + 20, 'green')
+                            this.drawText("" + d, 5, this.y0 + 32, 'bold ' + 20, '#c9af65')
                         }
                     }
 
@@ -329,12 +337,12 @@ class canvasView {
                             sdx = this.makeSdx(y, m, d, h, 0)
 
                             if (sdx > 0 && sdx < this.canvas.width || sdx < 0 && sdx + this.screenX(this.dayModelSize / 24) - this.screenX(0) > 0) {
-                                this.line(sdx, this.y0 + 15, sdx, this.y0, 'gray', 1);
+                                this.line(sdx, this.y0 + 10, sdx, this.y0 - 5, 'gray', 1);
 
                                 if (this.screenX(this.dayModelSize) - this.screenX(0) > 600) {
                                     this.drawText("" + h, sdx - 5, this.y0 - 10, 14, 'green')
 
-                                    if ((this.screenX(this.dayModelSize) - this.screenX(0)) / 24 > 400) {
+                                    if ((this.screenX(this.dayModelSize) - this.screenX(0)) / 24 > 200) {
 
                                         for (var M = 1; M < 60; M++) {
                                             sdx = this.makeSdx(y, m, d, h, M)
@@ -344,7 +352,7 @@ class canvasView {
                                                 this.drawText("" + M, sdx - 5, this.y0 - 10, 10, 'gray')
                                             }
                                             else {
-                                                if ((this.screenX(this.dayModelSize) - this.screenX(0)) / 24 > 400) {
+                                                if ((this.screenX(this.dayModelSize) - this.screenX(0)) / 24 > 300) {
                                                     this.line(sdx, this.y0 + 10, sdx, this.y0, 'gray', 1);
 
                                                     if ((this.screenX(this.dayModelSize) - this.screenX(0)) / 24 > 2000) {
