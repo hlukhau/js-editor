@@ -48,6 +48,7 @@ class canvasView {
         this.canvas.addEventListener('mousemove', this.mousemovelistener.bind(this), {passive: true})
         this.canvas.addEventListener('mouseup', this.mouseuplistener.bind(this), {passive: true})
         this.canvas.addEventListener('dblclick', this.mouseupDBClickListener.bind(this), {passive: true})
+        this.canvas.addEventListener('click', this.mouseupClickListener.bind(this), {passive: true})
         this.canvas.addEventListener('wheel', this.wheellistener.bind(this), {passive: true})
 
 
@@ -56,6 +57,8 @@ class canvasView {
         this.y1 = -(this.image.height - this.canvas.height) / 2;
         this.x0 = this.x1 + this.w1 / 2;
         this.y0 = this.y1 + this.h1 / 2;
+        this.down = false;
+        this.predown = false;
 
         var vertices = [[100, 100], [200, 300], [300, 0]];
         var area = geometric.polygonArea(vertices);
@@ -80,6 +83,14 @@ class canvasView {
             this.conturs.push(this.ps)
             this.ps = []
             document.getElementById('btn_create_polygon').classList.toggle('pressed');
+            this.draw();
+        }
+    }
+
+    mouseupClickListener(event) {
+
+        if (this.predown) {
+            this.down = true;
             this.draw();
         }
     }
@@ -123,14 +134,13 @@ class canvasView {
                     this.selected = contur;
                 }
             }
-
-            if (this.selected != null) {
-                this.draw();
-            }
         }
+
+        this.predown = true;
     }
 
     mousemovelistener(event) {
+        this.predown = false;
         this.mouse(event);
 
         if (this.isMove) {
@@ -408,7 +418,6 @@ class canvasView {
                     y -= blockHeight + 10;
                 }
 
-                console.log(sdx, lastSdx, e.name, dx, y);
                 this.context.strokeStyle = "gray";
                 this.context.fillStyle = "#a4ff9c";
 
@@ -421,10 +430,33 @@ class canvasView {
                     this.context.fillStyle = "#eeeeee";
                 }
 
+                // Selection
+                if (this.down) {
+                    if (this.mouseX > sdx - 10 && this.mouseX < sdx + dx + 10 && this.mouseY > y - (blockHeight + 3) && this.mouseY < y) {
+                        e.selected = true;
+                    }
+                    else {
+                        e.selected = false;
+                    }
+                }
+
+                if (e.selected) {
+                    this.context.lineWidth = 5
+                }
+                else {
+                    if (this.mouseX > sdx - 10 && this.mouseX < sdx + dx + 10 && this.mouseY > y - (blockHeight + 3) && this.mouseY < y) {
+                        this.context.lineWidth = 3
+                    }
+                    else {
+                        this.context.lineWidth = 1
+                    }
+                }
+
                 this.context.beginPath();
                 this.context.roundRect(sdx - 10, y, dx + 20, -(blockHeight + 3), [0]);
                 this.context.stroke();
                 this.context.fill();
+
 
                 this.line(sdx, this.y0, sdx, y, 'red', 1);
 
@@ -440,6 +472,8 @@ class canvasView {
                 this.drawText(e.description, sdx, y - blockHeight + 32, 12, 'gray')
                 lastSdx = sdx - 20
             }
+
+            this.down = false;
         }
     }
 
