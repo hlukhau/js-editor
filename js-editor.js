@@ -385,39 +385,59 @@ class canvasView {
                 return new Date(b.date) - new Date(a.date);
             });
 
-//            console.log(this.events[0].date, new Date(this.events[0].date));
-//            console.log(this.events[1].date, new Date(this.events[1].date));
-//            console.log(this.events[2].date, new Date(this.events[2].date));
-//            console.log(this.events[3].date, new Date(this.events[3].date));
-
             var lastSdx = 1000000
             var lastStartX
             var y
+            var blockHeight = 40
 
             for (const e of this.events) {
                 e.d = new Date(e.date)
                 var sdx = this.makeSdxByDate(e.d);
                 this.context.font = '16px Lato'
-                this.context.fillStyle = 'black'
                 var dx = this.context.measureText(e.name).width
+                this.context.font = '12px Lato'
+                var dx2 = this.context.measureText(e.description).width
+
+
+                if (dx2 > dx) dx = dx2
 
                 if (lastSdx > sdx + dx) {
-                    y = this.y0 - 25
+                    y = this.y0 - blockHeight
                 }
                 else {
-                    y -= 35;
+                    y -= blockHeight + 10;
                 }
 
                 console.log(sdx, lastSdx, e.name, dx, y);
                 this.context.strokeStyle = "gray";
-                this.context.fillStyle = "#faf8c3";
+                this.context.fillStyle = "#a4ff9c";
+
+                if (e.score > 7) {
+                    this.context.strokeStyle = "red";
+                    this.context.fillStyle = "#faf8c3";
+                }
+                if (e.name == 'LOGIN' || e.name == 'LOGOUT') {
+                    this.context.strokeStyle = "gray";
+                    this.context.fillStyle = "#eeeeee";
+                }
+
                 this.context.beginPath();
-                this.context.roundRect(sdx - 10, y, dx + 20, -28, [0]);
+                this.context.roundRect(sdx - 10, y, dx + 20, -(blockHeight + 3), [0]);
                 this.context.stroke();
                 this.context.fill();
 
                 this.line(sdx, this.y0, sdx, y, 'red', 1);
-                this.drawText(e.name, sdx, y - 8, 16, 'black')
+
+                if (e.name == 'LOGIN') {
+                    this.drawText(e.name, sdx, y - blockHeight + 14, 'bold ' + 16, 'blue')
+                }
+                else if (e.name == 'LOGOUT') {
+                    this.drawText(e.name, sdx, y - blockHeight + 14, 'bold ' + 16, 'red')
+                }
+                else {
+                    this.drawText(e.name, sdx, y - blockHeight + 14, 16, 'black')
+                }
+                this.drawText(e.description, sdx, y - blockHeight + 32, 12, 'gray')
                 lastSdx = sdx - 20
             }
         }
