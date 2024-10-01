@@ -16,11 +16,8 @@ class canvasView {
         this.image = source;
         this.canvas.oncontextmenu = function(e) { e.preventDefault(); e.stopPropagation(); return false;}
         this.isMove = false;
-        this.x0 = 0.0;
-        this.y0 = 0.0;
-        this.x1 = 0.0;
-        this.y1 = 0.0;
-        this.w1 = this.image.width;
+        //5778 618 1920
+        this.w1 = 1920 //this.image.width;
         this.h1 = this.image.height;
         this.mouseX = 0;
         this.mouseY = 0;
@@ -68,10 +65,12 @@ class canvasView {
             ' but [100, 200] in polygone = ' + geometric.pointInPolygon([100, 200], vertices)
         )
 
-
         fetch('./events.json')
             .then((response) => response.json())
-            .then((json) => this.events = json);
+            .then((json) => {
+                this.events = json;
+                this.draw();
+            });
 
         this.draw();
     }
@@ -153,6 +152,8 @@ class canvasView {
             this.x0 = this.x1 + this.w1 / 2;
             this.y0 = this.y1 + this.h1 / 2;
             this.scale = this.w1 / this.image.width;
+
+//            console.log(this.x0, this.y0, this.w1)
 
             this.draw();
 
@@ -693,6 +694,15 @@ window.onload = function () {
     var viewer = new canvasView(canvas, image);
     var buttons = document.getElementsByClassName('toggle_button')
     console.log(buttons);
+
+//    var refresh = document.getElementById("refresh")
+//    console.log(refresh)
+//
+//    refresh.addEventListener('click', (e) => {
+//        this.events = JSON.parse(document.getElementById("json").value)
+//        console.log(this.events)
+//        this.draw;
+//    })
 
     for(var element of buttons) {
 
