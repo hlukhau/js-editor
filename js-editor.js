@@ -695,14 +695,14 @@ window.onload = function () {
     var buttons = document.getElementsByClassName('toggle_button')
     console.log(buttons);
 
-//    var refresh = document.getElementById("refresh")
-//    console.log(refresh)
-//
-//    refresh.addEventListener('click', (e) => {
-//        this.events = JSON.parse(document.getElementById("json").value)
-//        console.log(this.events)
-//        this.draw;
-//    })
+    var refresh = document.getElementById("refresh")
+    console.log(refresh)
+
+    refresh.addEventListener('click', (e) => {
+        var json = JSON.parse(document.getElementById("json").value)
+        viewer.events = json;
+        viewer.draw();
+    })
 
     for(var element of buttons) {
 
