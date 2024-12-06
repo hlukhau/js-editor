@@ -1,0 +1,167 @@
+<html>
+  <head>
+    <title>Rectangles</title>
+    <meta name="viewport" content="user-scalable=NO, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <link rel="stylesheet" type="text/css" href="loader2.css">
+    <!--  Russo One, Yeseva One, Unbounded, Lato -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Russo One&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Yeseva One&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Unbounded&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato&display=swap">
+  
+
+    <!--<link href='https://fonts.googleapis.com/css?family=Montez|Lobster|Josefin+Sans|Shadows+Into+Light|Pacifico|Amatic+SC:700|Orbitron:400,900|Rokkitt|Righteous|Dancing+Script:700|Bangers|Chewy|Sigmar+One|Architects+Daughter|Abril+Fatface|Covered+By+Your+Grace|Kaushan+Script|Gloria+Hallelujah|Satisfy|Lobster+Two:700|Comfortaa:700|Cinzel|Courgette' rel='stylesheet' type='text/css'>-->
+
+    <style type="text/css">
+
+
+      #canv{z-index:9}
+      #canv {position: absolute}
+      #d{background-color:#fff;margin-top:-350px;z-index:999999;}
+      #prop {position:absolute; z-index:10; background-color:#fff;}
+
+
+      select{
+      	font-size: 30px;
+      }
+      #textProp{
+        position:absolute; z-index:10; background-color:#fff;
+      }
+
+      form {
+       margin-top:      0px;
+       margin-bottom:   0px;
+       margin-left:     0px;
+       margin-right:    0px;
+      }
+
+
+
+    </style>    
+
+
+<script src="pb/polybool.js"></script>
+<script src="posterviewer.js"></script>
+<script src="postereditor.js"></script>
+<script src="data 3.txt">
+</script>
+<!--<script src="data 2.txt">
+  let data2 = data;
+</script>-->
+
+
+    <script type="text/javascript" charset="utf-8">
+
+
+      let ps = PosterViewer("canv1", "images1", ""/*data*/);
+      let ps1 = PosterEditor(ps, "canv1", "file1", "textProp1", "imageProp1", "fillcolor1");
+
+
+
+
+    let MOD = (function() {
+
+      function sayHi(){
+        console.log("Hi");
+      }
+
+      return {
+        qqq: sayHi
+      }
+    });
+    
+    let m1 = MOD();
+
+    let MOD2 = (function(my){
+        my["say2"] = sayHi2;
+      
+
+      function sayHi2(){
+        console.log("Hi hi!", this.xxx());
+      }
+
+      return my;
+    });
+
+
+    let m2 = MOD2(m1);
+
+    m2.qqq();
+    m2.xxx = function(){return "aaaaaa";};
+    m2.say2();
+
+    </script>
+  </head>
+  <body style="height: 100%; margin: 0;" bgcolor="#777777" onload="ps1.init();">
+
+  <!--  <iframe allowtransparency="true" width="100%" height="100%" src="https://www.psu.by" frameborder="0" allowfullscreen></iframe>-->
+
+      <canvas id="canv1" tabindex="1" style="z-index:1; width: 100%; height: 100%"></canvas><br/>
+    
+    <canvas id="copy" width="100" height="100" hidden></canvas>
+
+    <!--<canvas id="canv2" width="1200" height="400" tabindex="1" style="z-index:1"></canvas>-->
+
+      <form id="form" hidden=true>
+        <input type="file" id="file1"></input>
+        <input type="file" id="file2"></input>
+        <input type="color" id="fillcolor1"/>
+        <input type="color" id="fillcolor2"/>
+      </form>
+
+    <div id="imageProp1" style="z-index:2; position:absolute; top:40; left:0; background-color: #aaa; padding: 0px; margin: 0px;" hidden=true> 
+      <form id="imageForm">
+          <button id="fromimages" style="vertical-align:middle; width: 150px;" type='button' onclick="ps1.ReadImage(true);"><span>From .images/</span></button>
+          <br /> <button style="vertical-align:middle; width: 150px;" type='button' onclick="ps1.ReadImage();"><span>From URL</span></button></form></div> 
+
+    <div id="imageProp2" style="z-index:2; position:absolute; top:40; left:0; background-color: #aaa; padding: 0px; margin: 0px;" hidden=true> 
+      <form id="imageForm">
+          <button id="fromimages" style="vertical-align:middle; width: 150px;" type='button' onclick="ps2.ReadImage(true);"><span>From .images/</span></button>
+          <br /> <button style="vertical-align:middle; width: 150px;" type='button' onclick="ps2.ReadImage();"><span>From URL</span></button></form></div> 
+                
+
+    <div id="textProp1" style="z-index:2; position:absolute; top:140; left:100; background-color: #aaa; padding: 0px; margin: 0px;" hidden=false>
+      <select id="textProp1f" onChange = "ps1.fontChange();">
+        <option>Lato</option>>
+        <option>Unbounded</option>>
+        <option>Russo One</option>
+        <option>Yeseva One</option>
+      </select>
+    </div>    
+
+    <div id="textProp2" style="z-index:2; position:absolute; top:140; left:100; background-color: #aaa; padding: 0px; margin: 0px;" hidden=false>
+      <select id="textProp2f" onChange = "ps2.fontChange();">
+        <option>Lato</option>>
+        <option>Unbounded</option>>
+        <option>Russo One</option>
+        <option>Yeseva One</option>
+      </select>
+    </div>    
+
+
+<!--        <div class="loader" id="loader">
+          <div class="l_main">
+            <div class="l_square"><span></span><span></span><span></span></div>
+            <div class="l_square"><span></span><span></span><span></span></div>
+            <div class="l_square"><span></span><span></span><span></span></div>
+            <div class="l_square"><span></span><span></span><span></span></div>
+          </div>
+        </div>   -->   
+
+    <textarea id="input" placeholder="" hidden=true></textarea>
+   
+
+
+
+
+    <div id="images1" hidden=true>
+      <img id="dataimg"></img>
+    </div>
+
+    <div id="images2" hidden=true>
+      <img id="dataimg"></img>
+    </div>
+    </body>
+</html>

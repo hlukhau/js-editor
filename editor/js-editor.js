@@ -33,6 +33,7 @@ class canvasView {
         this.isCreateCircle = false;
         this.isCreateRectangle = false;
         this.isCreateDiagram = false;
+        this.isCreateInputNode = false;
         this.dayModelSize = 10000;
 
         this.conturs = []
@@ -65,12 +66,12 @@ class canvasView {
             ' but [100, 200] in polygone = ' + geometric.pointInPolygon([100, 200], vertices)
         )
 
-        fetch('./events.json')
-            .then((response) => response.json())
-            .then((json) => {
-                this.events = json;
-                this.draw();
-            });
+//        fetch('./events.json')
+//            .then((response) => response.json())
+//            .then((json) => {
+//                this.events = json;
+//                this.draw();
+//            });
 
         this.draw();
     }
@@ -232,8 +233,8 @@ class canvasView {
 //        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 //        this.context.drawImage(this.image, this.x1, this.y1, this.w1, this.h1);
 //        this.drawAxis()
-        this.drawTimeAxis()
-        this.drawEvents()
+//        this.drawTimeAxis()
+//        this.drawEvents()
         this.drawScene()
     }
 
@@ -677,6 +678,14 @@ class canvasView {
     drawTimeline() {
         this.context.measureText('qwe');
     }
+
+    clearAllCreation () {
+        this.isCreateCircle = false
+        this.isCreateRectangle = false
+        this.isCreateDiagram = false
+        this.isCreateCountur = false
+        this.isCreateInputNode = false;
+    }
 };
 
 
@@ -695,14 +704,14 @@ window.onload = function () {
     var buttons = document.getElementsByClassName('toggle_button')
     console.log(buttons);
 
-    var refresh = document.getElementById("refresh")
-    console.log(refresh)
-
-    refresh.addEventListener('click', (e) => {
-        var json = JSON.parse(document.getElementById("json").value)
-        viewer.events = json;
-        viewer.draw();
-    })
+//    var refresh = document.getElementById("refresh")
+//    console.log(refresh)
+//
+//    refresh.addEventListener('click', (e) => {
+//        var json = JSON.parse(document.getElementById("json").value)
+//        viewer.events = json;
+//        viewer.draw();
+//    })
 
     for(var element of buttons) {
 
@@ -711,38 +720,41 @@ window.onload = function () {
 
             resetAllOther(e.target.innerText);
 
+
+            if (e.target.innerText == 'Input node') {
+                var old = viewer.isCreateInputNode;
+                viewer.clearAllCreation();
+                viewer.isCreateInputNode = 1 - old;
+            }
+
             if (e.target.innerText == 'Create polygon') {
-                viewer.isCreateCircle = false
-                viewer.isCreateRectangle = false
-                viewer.isCreateDiagram = false
-                viewer.isCreateCountur = 1 - viewer.isCreateCountur;
+                var old = viewer.isCreateCountur;
+                viewer.clearAllCreation();
+                viewer.isCreateCountur = 1 - old;
                 viewer.ps = []
                 console.log(e.target.innerText + ' ' + viewer.isCreateCountur);
             }
 
             if (e.target.innerText == 'Create circle') {
-                viewer.isCreateCountur = false
-                viewer.isCreateRectangle = false
-                viewer.isCreateDiagram = false
-                viewer.isCreateCircle = 1 - viewer.isCreateCircle;
+                var old = viewer.isCreateCircle;
+                viewer.clearAllCreation();
+                viewer.isCreateCircle = 1 - old;
                 viewer.p1 = [1e20, 1e20]
                 console.log(e.target.innerText + ' ' + viewer.isCreateCircle);
             }
 
             if (e.target.innerText == 'Create rectangle') {
-                viewer.isCreateCountur = false
-                viewer.isCreateCircle = false
-                viewer.isCreateDiagram = false
-                viewer.isCreateRectangle = 1 - viewer.isCreateRectangle;
+                var old = viewer.isCreateRectangle;
+                viewer.clearAllCreation();
+                viewer.isCreateRectangle = 1 - old;
                 viewer.ps = []
                 console.log(e.target.innerText + ' ' + viewer.isCreateRectangle);
             }
 
             if (e.target.innerText == 'Create diagram') {
-                viewer.isCreateCountur = false
-                viewer.isCreateCircle = false
-                viewer.isCreateRectangle = false
-                viewer.isCreateDiagram = 1 - viewer.isCreateDiagram;
+                var old = viewer.isCreateDiagram;
+                viewer.clearAllCreation();
+                viewer.isCreateDiagram = 1 - old;
                 viewer.ps = []
                 console.log(e.target.innerText + ' ' + viewer.isCreateDiagram);
             }
