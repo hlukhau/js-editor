@@ -143,6 +143,7 @@ let PosterViewer = (function(canv, images, preload) {
           this.c = o.toRectWorld(0, 0);
         }
       }
+
       toJSON() {
         return {
           $type: "Position",
@@ -157,6 +158,7 @@ let PosterViewer = (function(canv, images, preload) {
           objectId: this.objectId,
         }
       }
+
       static fromJSON(data) {
         let f = new Position(null);
         f.tx = data.tx;
@@ -169,6 +171,17 @@ let PosterViewer = (function(canv, images, preload) {
         f.id = data.id;
         f.objectId = data.objectId;
         return f;
+      }
+
+      clone(o) {
+        this.tx = o.tx;
+        this.ty = o.ty;
+        this.rot = o.rot;
+        this.scale = o.scale;
+        this.xy = o.xy;
+        this.scalescale = o.scalescale;
+        this.objectId = o.objectId;
+        this.c = o.c;
       }
     }
     
@@ -1544,6 +1557,7 @@ let PosterViewer = (function(canv, images, preload) {
         f.order = n++;
         finalFrame = f;
       }
+
       g.resetTransform();
       //playstop.draw(g);
     
@@ -1599,6 +1613,8 @@ let PosterViewer = (function(canv, images, preload) {
         rotstep = (frot - rot) / st;
         scalestep = (fscale - scale) / st;
     
+        console.log('positions', positions)
+
         // create object steps
         for (let o of objects) {
     
@@ -1606,6 +1622,7 @@ let PosterViewer = (function(canv, images, preload) {
     
     
             let pos = ofmap.get(o.objectId * 1e6 + lastFrame.id);
+
             let prev = new Position(o);
     
             if (! o.note && ! o.textnote) {
@@ -1627,15 +1644,22 @@ let PosterViewer = (function(canv, images, preload) {
                       let f = fmap.get(p.id);
     
                       if (! f) {
+
                         if (! pos) {
                           pos = p;
+                          pos.order = -1;
+
+                          console.log('! pos', pos)
                         }
                       } else {
+
     
+                        console.log('else pos --- ', f, lastFrame, pos)
                         if (f.order < lastFrame.order) {
     
                           if (pos && pos.order < f.order) { 
                             pos = p;
+                            pos.order = f.order;
                           }
                         }
                       }

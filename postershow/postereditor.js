@@ -1300,23 +1300,55 @@ let PosterEditor = (function(keys, canv, file, textProp, imageProp, fillcolor) {
       let lastFrame = getLastFrame();
 
       let frame = new Frame();
-      frames.add(frame);
+      frames2 = new Set(frames)
+      frames.clear()
 
       if (lastFrame) {
-        framesIterator = frames.values(); 
-        let prev = framesIterator.next();
+        framesIterator = frames2.values(); 
         let next = framesIterator.next();
     
-        while (prev.value != lastFrame){
-          prev = next;
+        while (next.value != lastFrame){
+          frames.add(next.value)
           next = framesIterator.next();
         }
+
+        frames.add(next.value)
+        next = framesIterator.next();
+
+        frames.add(frame)
+
+        while (next.value != undefined){
+          frames.add(next.value)
+          next = framesIterator.next();
+        }
+
+        // for (let p of positions) {
     
-        if (next && next.value != frame) swapFrames(next.value, frame);
-        frame = next.value;
+        //   if (p.id == lastFrame.id) {
+        //     // console.log(lastFrame, p)
+
+        //     ofmap.forEach(function(p2, k) {
+
+        //       // console.log(k, p2)
+        //       if (p2 == p) {
+        //         let p3 = new Position()
+        //         p3.clone(p)
+        //         p3.id = frame.id
+        //         ofmap.set(k - lastFrame.id + frame.id, p3)
+        //         positions.add(p3)
+        //         // console.log(p, p3)
+        //       }
+        //     });
+        //   }
+        // }
+
+        lastFrame = frame;
+      }
+      else {
+        frames.add(frame)
       }
 
-      lastFrame = frame;
+
       setLastFrame(frame);
       redraw();
     }
@@ -1535,7 +1567,7 @@ let PosterEditor = (function(keys, canv, file, textProp, imageProp, fillcolor) {
           // exist
           if (p.id == lastFrame.id) {
     
-            ofmap.forEach(function(v, k) {
+            ofmap.forEach(function(k, v) {
               if (v == p) ofmap.delete(k);
             });
             positions.delete(p);
