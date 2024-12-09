@@ -1303,6 +1303,7 @@ let PosterEditor = (function(keys, canv, file, textProp, imageProp, fillcolor) {
       frames2 = new Set(frames)
       frames.clear()
 
+      // переупаковываем списак кадров
       if (lastFrame) {
         framesIterator = frames2.values(); 
         let next = framesIterator.next();
@@ -1315,32 +1316,14 @@ let PosterEditor = (function(keys, canv, file, textProp, imageProp, fillcolor) {
         frames.add(next.value)
         next = framesIterator.next();
 
+        // вставляем новый кадр в нужную позицию после выделенного lastFrame
         frames.add(frame)
 
+        // вставляем остаток кадров
         while (next.value != undefined){
           frames.add(next.value)
           next = framesIterator.next();
         }
-
-        // for (let p of positions) {
-    
-        //   if (p.id == lastFrame.id) {
-        //     // console.log(lastFrame, p)
-
-        //     ofmap.forEach(function(p2, k) {
-
-        //       // console.log(k, p2)
-        //       if (p2 == p) {
-        //         let p3 = new Position()
-        //         p3.clone(p)
-        //         p3.id = frame.id
-        //         ofmap.set(k - lastFrame.id + frame.id, p3)
-        //         positions.add(p3)
-        //         // console.log(p, p3)
-        //       }
-        //     });
-        //   }
-        // }
 
         lastFrame = frame;
       }

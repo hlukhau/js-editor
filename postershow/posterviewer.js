@@ -1643,24 +1643,26 @@ let PosterViewer = (function(canv, images, preload) {
     
                       let f = fmap.get(p.id);
     
+                      // если не было трансформаций, то считаем начальное положение объекта единственной трансформацией и устанавливаем ей порядок -1
                       if (! f) {
 
                         if (! pos) {
                           pos = p;
                           pos.order = -1;
-
-                          console.log('! pos', pos)
                         }
                       } else {
 
-    
-                        console.log('else pos --- ', f, lastFrame, pos)
+                        // если для объекта добавлялась трансформация на кадре до текущего
                         if (f.order < lastFrame.order) {
     
+                          // то берем такую трансформацию с максимальным порядком, самую приближенную к текущему кадру
                           if (pos && pos.order < f.order) { 
                             pos = p;
                             pos.order = f.order;
                           }
+                        }
+                        else {
+                          pos = undefined
                         }
                       }
                   }
