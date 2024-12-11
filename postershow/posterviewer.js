@@ -1500,7 +1500,8 @@ let PosterViewer = (function(canv, images, preload) {
           }
         }
     
-        let x = 4 + num * 36 + 1;
+        // todo: draw frames scrolling
+        let x = 44 + num * 36 + 1;
         let y = screen.height - 56; 34
         let w = h = 32;
         let step = 34;

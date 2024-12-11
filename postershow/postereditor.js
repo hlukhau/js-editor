@@ -254,8 +254,9 @@ let PosterEditor = (function(keys, canv, file, textProp, imageProp, fillcolor) {
           if (lastOver == panel4) {
     
     
-            if (getFrameIntervalId() == 0) {
-              let x = 4 + num * 36 + 1;
+        // todo: select frames scrolling
+        if (getFrameIntervalId() == 0) {
+              let x = 44 + num * 36 + 1;
               let y = screen.height - 56; 34
               let w = h = 32;
               let step = 34;
@@ -1642,7 +1643,8 @@ let PosterEditor = (function(keys, canv, file, textProp, imageProp, fillcolor) {
       logo.script = "logoscript();";
       objects.add(logo);
 
-      let x = 4 + num * 36;
+      // todo: panel frames scrolling
+      let x = 44 + num * 36;
       panel4 = new Rect(x, screen.height - 58, screen.width - x - 4, 36, "#999", "#999");
       panel4.scalable = false;
       panel4.id = "panel4";
